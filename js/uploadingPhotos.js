@@ -1,3 +1,5 @@
+import {errorUploadHandler} from './validationImg.js';
+const fileChooser = document.querySelector('.img-upload__start input[type=file]');
 // Форма редактирования изображения
 const uploadPhotos = document.querySelector('#upload-file');
 const photosUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -21,6 +23,8 @@ const SCALE_LIMITS = {
   max: 100,
   step: 25,
 };
+//
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 // Насыщенность по умолчанию
 const DEFAULT_EFFECT_LEVEL = 100;
 // Максимальная насыщенность каждого эффекта
@@ -41,9 +45,19 @@ const escPress = function (evt) {
 };
 // Открытие окна
 const openModal = function () {
-  photosUploadOverlay.classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
-  document.addEventListener('keydown', escPress);
+  const file = fileChooser.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
+  });
+  if (!matches) {
+    errorUploadHandler('Недопустимый формат');
+    closeModal();
+  } else {
+    photosUploadOverlay.classList.remove('hidden');
+    document.querySelector('body').classList.add('modal-open');
+    document.addEventListener('keydown', escPress);
+  }
 };
 // Закрытие окна
 const closeModal = function () {
@@ -155,4 +169,3 @@ export {
   effects,
   changeFilterHandler
 };
-

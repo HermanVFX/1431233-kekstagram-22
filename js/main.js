@@ -10,7 +10,8 @@ import {
   effects,
   changeFilterHandler
 } from './uploadingPhotos.js';
-import {load} from './server.js'
+import {load} from './server.js';
+import {validation} from './validation.js';
 // Открытие и закрытия окна редактирования нового фото
 uploadPhotos.addEventListener('change', function () {
   openModal();
@@ -26,3 +27,5 @@ scaleControlBigger.addEventListener('click', onPlusScaleClick);
 effects.addEventListener('click', changeFilterHandler);
 // Загрузка данных с сервера
 load();
+// Валидация хэштегов и описания
+validation();
