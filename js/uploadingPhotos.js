@@ -63,10 +63,10 @@ const openModal = function () {
     document.addEventListener('keydown', escPress);
 
     const reader = new FileReader();
-    reader.addEventListener(`load`, () => {
+    reader.addEventListener('load', () => {
       const image = reader.result;
       imageUploadPreview.src = image;
-      for (var i = 0; i < imageUploadPreviewEffect.length; i++) {
+      for (let i = 0; i < imageUploadPreviewEffect.length; i++) {
         imageUploadPreviewEffect[i].style.backgroundImage = 'url(' + image + ')';
       }
     });

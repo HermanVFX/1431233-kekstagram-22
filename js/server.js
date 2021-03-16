@@ -16,7 +16,7 @@ const load = function(){
   fetch('https://22.javascript.pages.academy/kekstagram/data')
     .then((response) => {
       if (!response.ok) {
-        alert(`Произошла ошибка соединения`);
+        alert('Произошла ошибка соединения');
       }
       return response.json();
     })
@@ -51,8 +51,8 @@ const upload = (evt) => {
     .catch(() => {
       showErrorMessage();
     });
-    closeModal();
-    showLoadingMessage();
+  closeModal();
+  showLoadingMessage();
 };
 
 
