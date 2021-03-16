@@ -9,7 +9,7 @@ const HASHTAG_REG_EXP = /^#([а-яА-Я]|[a-zA-Z]|[0-9]){1,20}$/;
 const UserMessage = {
   LESS_THEN_FIVE: 'Нельзя указать больше пяти хэш-тегов',
   NO_DUPLICATES: 'Один и тот же хэш-тег не может быть использован дважды',
-  CORRECT: 'Не верный формат хештега',
+  CORRECT: 'Неверный формат хештега',
 };
 
 const hashtagsInputHandler = function (evt) {
@@ -65,7 +65,7 @@ const commentsInputHandler = function (evt) {
   const { target: commentsField } = evt;
   const valueLength = commentsField.value.length;
   if (commentsField.value.length > COMMENTS_MAX) {
-    commentsField.setCustomValidity('Удалите ' + (COMMENTS_MAX - valueLength) + ' симв.');
+    commentsField.setCustomValidity('Удалите ' + (valueLength - COMMENTS_MAX) + ' симв.');
     commentsField.style.outline = '2px solid red';
     commentsField.style.background = 'pink';
   } else {
@@ -80,8 +80,5 @@ const validation = function () {
   hashTagsField.addEventListener('input', hashtagsInputHandler);
   textDescription.addEventListener('input', commentsInputHandler);
 };
-
-
-
 
 export {validation};
