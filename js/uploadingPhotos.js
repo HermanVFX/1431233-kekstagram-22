@@ -17,13 +17,14 @@ const counterValue = document.querySelector('.scale__control--value');
 const effectsItemDefault = document.querySelector('.effects__item:first-child');
 const effectsItem = document.querySelectorAll('.effects__item');
 const imgUploadEffectLevel = document.querySelector('.img-upload__effect-level');
+const imageUploadPreviewEffect = document.querySelectorAll('.effects__preview');
 // Процент масштабирования
 const SCALE_LIMITS = {
   min: 25,
   max: 100,
   step: 25,
 };
-//
+// Форматы для проверки загружаемых файлов
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 // Насыщенность по умолчанию
 const DEFAULT_EFFECT_LEVEL = 100;
@@ -45,6 +46,9 @@ const escPress = function (evt) {
 };
 // Открытие окна
 const openModal = function () {
+
+  imageUploadPreview.className = 'effects__preview--none';
+  imageUploadPreview.style = ''
   const file = fileChooser.files[0];
   const fileName = file.name.toLowerCase();
   const matches = FILE_TYPES.some((it) => {
@@ -57,6 +61,16 @@ const openModal = function () {
     photosUploadOverlay.classList.remove('hidden');
     document.querySelector('body').classList.add('modal-open');
     document.addEventListener('keydown', escPress);
+
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      const image = reader.result;
+      imageUploadPreview.src = image;
+      for (let i = 0; i < imageUploadPreviewEffect.length; i++) {
+        imageUploadPreviewEffect[i].style.backgroundImage = 'url(' + image + ')';
+      }
+    });
+    reader.readAsDataURL(file);
   }
 };
 // Закрытие окна

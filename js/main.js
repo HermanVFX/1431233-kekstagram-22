@@ -12,6 +12,8 @@ import {
 } from './uploadingPhotos.js';
 import {load} from './server.js';
 import {validation} from './validation.js';
+import {upload} from './server.js';
+const imgUploadSubmit = document.querySelector('.img-upload__form');
 // Открытие и закрытия окна редактирования нового фото
 uploadPhotos.addEventListener('change', function () {
   openModal();
@@ -29,3 +31,5 @@ effects.addEventListener('click', changeFilterHandler);
 load();
 // Валидация хэштегов и описания
 validation();
+// Загрузка поста на сервер
+imgUploadSubmit.addEventListener('submit', upload);
