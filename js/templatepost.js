@@ -111,6 +111,7 @@ const generatePostBlock = function (post) {
   });
   return postElement;
 };
+
 const generateGroupPosts = function (collection) {
   let fragment = document.createDocumentFragment();
   for (let i = 0; i < collection.length; i++) {

@@ -7,11 +7,14 @@ import {
   showSuccessMessage,
   showErrorMessage,
   showLoadingMessage,
-  hiddeLoadingMessage
+  hideLoadingMessage
 } from './success.js';
 import {
   closeModal
 } from './uploadingPhotos.js';
+import {randomFilterButton, defaultFilterButton, discussedFilterButton} from './filters.js';
+import {sortCommentDescend} from './util.js';
+
 const load = function(){
   fetch('https://22.javascript.pages.academy/kekstagram/data')
     .then((response) => {
@@ -21,14 +24,43 @@ const load = function(){
       return response.json();
     })
     .then((json) => {
-      generatePostBlock.photoDescriptions = json;
-      postList.appendChild(generateGroupPosts(json));
-      return undefined;
+      const clearPictureList = (pictures) => {
+        for (let i = 0; i < pictures.length; i++) {
+          pictures[i].outerHTML = '';
+        }
+      };
+      const pictures =  document.querySelectorAll('.picture');
+      clearPictureList(pictures);
+      document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+      if (discussedFilterButton.classList.contains('img-filters__button--active')) {
+
+        json.sort(sortCommentDescend);
+        generatePostBlock.photoDescriptions = json;
+        postList.appendChild(generateGroupPosts(json));
+        return undefined;
+
+      } if (randomFilterButton.classList.contains('img-filters__button--active')) {
+
+        json.sort(function(){
+          return 0.5 - Math.random()
+        });
+        json.length = 10;
+        generatePostBlock.photoDescriptions = json;
+        postList.appendChild(generateGroupPosts(json));
+        return undefined;
+
+      } if (defaultFilterButton.classList.contains('img-filters__button--active')) {
+
+        generatePostBlock.photoDescriptions = json;
+        postList.appendChild(generateGroupPosts(json));
+        return undefined;
+
+      }
     });
   return undefined;
 };
 
-const upload = (evt) => {
+const upload = function(evt) {
   const formData = new FormData(evt.target);
   evt.preventDefault();
 
@@ -41,10 +73,10 @@ const upload = (evt) => {
   )
     .then((response) => {
       if (response.ok) {
-        hiddeLoadingMessage();
+        hideLoadingMessage();
         showSuccessMessage();
       } else {
-        hiddeLoadingMessage();
+        hideLoadingMessage();
         showErrorMessage();
       }
     })
@@ -54,6 +86,5 @@ const upload = (evt) => {
   closeModal();
   showLoadingMessage();
 };
-
 
 export {load, upload};

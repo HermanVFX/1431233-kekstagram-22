@@ -1,21 +1,21 @@
-// Функция, возвращающая случайное целое число из переданного диапазона включительно.
-const getRandomNumber = function(min, max) {
-  return Math.floor(min + Math.random() * (max + 1 - min));
+// Функция debounce взята с ресурса https://learn.javascript.ru/task/debounce
+function debounce(f, ms) {
+  let isCooldown = false;
+
+  return function() {
+    if (isCooldown) return;
+    f.apply(this, arguments);
+    isCooldown = true;
+    setTimeout(() => isCooldown = false, ms);
+  };
+}
+// Подсчет коментариев для сортировки
+const getCommentsAmount = (photo) => {
+  return photo.comments.length;
 };
-// Функция для проверки максимальной длины строки.
-const checkMaxLengthString = function (checkedString, maxLength) {
-  return checkedString.length <= maxLength;
+// Сравнение
+const sortCommentDescend = (pictureA, pictureB) => {
+  return getCommentsAmount(pictureB) - getCommentsAmount(pictureA);
 };
-// Функция создания массива со случайными уникальными числами
-const createRandomArray = function (length, max) {
-  let arrayRandomNumber = [];
-  while (arrayRandomNumber.length < length) {
-    let randomNamber = getRandomNumber(1, max);
-    while (!arrayRandomNumber.includes(randomNamber)) {
-      arrayRandomNumber[arrayRandomNumber.length] = randomNamber;
-    }
-  }
-  return arrayRandomNumber;
-};
-// Экспорт функций (экспортировал checkMaxLengthString для того что бы не ругался линтер)
-export {getRandomNumber, checkMaxLengthString, createRandomArray};
+
+export {debounce, sortCommentDescend}

@@ -94,8 +94,8 @@ const showLoadingMessage = function() {
   main.appendChild(alertBox);
 };
 
-const hiddeLoadingMessage = function() {
+const hideLoadingMessage = function() {
   document.querySelector('body').classList.remove('modal-open');
   main.querySelector('.img-upload__message--loading').remove();
 };
-export {showErrorMessage, showSuccessMessage, showLoadingMessage, hiddeLoadingMessage};
+export {showErrorMessage, showSuccessMessage, showLoadingMessage, hideLoadingMessage};
