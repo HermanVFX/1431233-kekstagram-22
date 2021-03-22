@@ -1,4 +1,5 @@
-import {closeModal} from './uploadingPhotos.js';
+'use strict';
+import {closeModal} from './uploading-photos.js';
 
 const main = document.querySelector('main');
 const form = document.querySelector('.img-upload__form');

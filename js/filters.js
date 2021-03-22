@@ -1,4 +1,5 @@
-import {debounce} from './util.js';
+
+'use strict';import {debounce} from './util.js';
 import {load} from './server.js';
 const RERENDER_DELAY = 500;
 const debounceLoad = debounce(() => load(), RERENDER_DELAY);

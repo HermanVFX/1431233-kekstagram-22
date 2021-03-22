@@ -1,10 +1,11 @@
+'use strict';
 const uploadForm = document.querySelector('.img-upload__form');
 const hashTagsField = uploadForm.querySelector('.text__hashtags');
 const textDescription = uploadForm.querySelector('.text__description');
 
 const HASHTAGS_MAX_COUNT = 5;
 const COMMENTS_MAX = 140;
-const HASHTAG_REG_EXP = /^#([а-яА-Я]|[a-zA-Z]|[0-9]){1,20}$/;
+const HASHTAG_REG_EXP = /^#([а-яА-Я]|[a-zA-Z]|[0-9]){1,19}$/;
 
 const UserMessage = {
   LESS_THEN_FIVE: 'Нельзя указать больше пяти хэш-тегов',

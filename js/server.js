@@ -1,8 +1,9 @@
+'use strict';
 import {
   postList,
   generateGroupPosts,
   generatePostBlock
-} from './templatePost.js';
+} from './template-post.js';
 import {
   showSuccessMessage,
   showErrorMessage,
@@ -11,7 +12,7 @@ import {
 } from './success.js';
 import {
   closeModal
-} from './uploadingPhotos.js';
+} from './uploading-photos.js';
 import {randomFilterButton, defaultFilterButton, discussedFilterButton} from './filters.js';
 import {sortCommentDescend} from './util.js';
 

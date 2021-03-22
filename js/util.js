@@ -1,3 +1,4 @@
+'use strict';
 // Функция debounce взята с ресурса https://learn.javascript.ru/task/debounce
 function debounce(f, ms) {
   let isCooldown = false;

@@ -1,3 +1,4 @@
+'use strict';
 import {
   uploadPhotos,
   uploadCancel,
@@ -9,7 +10,7 @@ import {
   onPlusScaleClick,
   effects,
   changeFilterHandler
-} from './uploadingPhotos.js';
+} from './uploading-photos.js';
 import {load} from './server.js';
 import {validation} from './validation.js';
 import {upload} from './server.js';

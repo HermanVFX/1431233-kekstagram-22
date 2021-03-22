@@ -1,4 +1,5 @@
-import {errorUploadHandler} from './validationImg.js';
+'use strict';
+import {errorUploadHandler} from './validation-img.js';
 const fileChooser = document.querySelector('.img-upload__start input[type=file]');
 // Форма редактирования изображения
 const uploadPhotos = document.querySelector('#upload-file');
