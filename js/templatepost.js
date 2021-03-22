@@ -60,7 +60,7 @@ const showPost = function (post) {
   }
 
   const showComments = function () {
-    currentLimit += currentIndex;
+    currentLimit += 5;
     for (
       currentIndex;
       currentIndex < currentLimit && currentIndex < post.comments.length;
@@ -85,7 +85,7 @@ const showPost = function (post) {
 // Закрытие поста
 const onBigPictureCloseClick = function () {
   bigPicture.classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
+  document.querySelector('body').classList.remove('modal-open');
   bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
   document.addEventListener('keydown', escPress);
 };
