@@ -1,5 +1,23 @@
 'use strict';
-import {errorUploadHandler} from './validation-img.js';
+// Процент масштабирования
+const SCALE_LIMITS = {
+  min: 25,
+  max: 100,
+  step: 25,
+};
+// Форматы для проверки загружаемых файлов
+const SUPPORTED_FORMATS  = ['jpg', 'jpeg', 'png'];
+// Насыщенность по умолчанию
+const DEFAULT_EFFECT_LEVEL = 100;
+// Максимальная насыщенность каждого эффекта
+const MAX_EFFECTS_VALUES = {
+  chrome: 1,
+  sepia: 1,
+  marvin: 100,
+  phobos: 3,
+  HEAT_VALUES: [1, 2],
+};
+
 const fileChooser = document.querySelector('.img-upload__start input[type=file]');
 // Форма редактирования изображения
 const uploadPhotos = document.querySelector('#upload-file');
@@ -19,27 +37,21 @@ const effectsItemDefault = document.querySelector('.effects__item:first-child');
 const effectsItem = document.querySelectorAll('.effects__item');
 const imgUploadEffectLevel = document.querySelector('.img-upload__effect-level');
 const imageUploadPreviewEffect = document.querySelectorAll('.effects__preview');
-// Процент масштабирования
-const SCALE_LIMITS = {
-  min: 25,
-  max: 100,
-  step: 25,
-};
-// Форматы для проверки загружаемых файлов
-const FILE_TYPES = ['jpg', 'jpeg', 'png'];
-// Насыщенность по умолчанию
-const DEFAULT_EFFECT_LEVEL = 100;
-// Максимальная насыщенность каждого эффекта
-const MAX_EFFECTS_VALUES = {
-  chrome: 1,
-  sepia: 1,
-  marvin: 100,
-  phobos: 3,
-  heat: [1, 2],
-};
+// ХашТег и описание
+const uploadForm = document.querySelector('.img-upload__form');
+const hashTagsField = uploadForm.querySelector('.text__hashtags');
+const textDescription = uploadForm.querySelector('.text__description');
+
+import {errorUploadHandler} from './validation-img.js';
+import {upload} from './server.js';
+import {
+  showSuccessMessage,
+  showErrorMessage
+} from './success.js';
+
 // Функция закрытия окна нажатием Escape
 const escPress = function (evt) {
-  if (evt.key === 'Escape') {
+  if (evt.key === 'Escape' && hashTagsField !== document.activeElement && textDescription !== document.activeElement) {
     imgUploadEffectLevel.classList.add('hidden');
     evt.preventDefault();
     closeModal();
@@ -52,7 +64,7 @@ const openModal = function () {
   imageUploadPreview.style = ''
   const file = fileChooser.files[0];
   const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((it) => {
+  const matches = SUPPORTED_FORMATS.some((it) => {
     return fileName.endsWith(it);
   });
   if (!matches) {
@@ -83,6 +95,8 @@ const closeModal = function () {
   imageUploadPreview.className = 'effects__preview--none';
   imageUploadPreview.style = ''
   imgUploadEffectLevel.classList.add('hidden');
+  hashTagsField.value = '';
+  textDescription.value = '';
 };
 // Уменьшение масштаба изображения нажатием на минус
 const onMinusScaleClick = function () {
@@ -133,7 +147,7 @@ const setNewEffectDepth = function (levelValue) {
         imageUploadPreview.style.filter = 'blur(' + (MAX_EFFECTS_VALUES.phobos * value) + 'px)';
         break;
       case 'effects__preview--heat':
-        imageUploadPreview.style.filter = 'brightness(' + (MAX_EFFECTS_VALUES.heat[1] * value + MAX_EFFECTS_VALUES.heat[0]) + ')';
+        imageUploadPreview.style.filter = 'brightness(' + (MAX_EFFECTS_VALUES.HEAT_VALUES[1] * value + MAX_EFFECTS_VALUES.HEAT_VALUES[0]) + ')';
         break;
       default:
         imageUploadPreview.style.filter = '';
@@ -170,17 +184,31 @@ effectsItem.forEach((item) => {
 effectsItemDefault.addEventListener('click', () => {
   imgUploadEffectLevel.classList.add('hidden');
 });
+// Уменьшение изображение в редакторе
+scaleControlSmaller.addEventListener('click', onMinusScaleClick);
+// Увеличение изображение в редакторе
+scaleControlBigger.addEventListener('click', onPlusScaleClick);
+// Наложение эффектов
+effects.addEventListener('click', changeFilterHandler);
+// Загрузка поста на сервер
+uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  upload(
+    showSuccessMessage,
+    showErrorMessage,
+    evt,
+  );
+});
+// Открытие и закрытия окна редактирования нового фото
+uploadPhotos.addEventListener('change', function () {
+  openModal();
+});
+uploadCancel.addEventListener('click', function () {
+  closeModal();
+});
 // Экспорт
 export {
-  uploadPhotos,
-  uploadCancel,
   closeModal,
-  openModal,
-  imageUploadPreview,
-  scaleControlSmaller,
-  scaleControlBigger,
-  onMinusScaleClick,
-  onPlusScaleClick,
-  effects,
-  changeFilterHandler
+  hashTagsField,
+  textDescription
 };

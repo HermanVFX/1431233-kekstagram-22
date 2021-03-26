@@ -1,70 +1,23 @@
 'use strict';
-import {
-  postList,
-  generateGroupPosts,
-  generatePostBlock
-} from './template-post.js';
-import {
-  showSuccessMessage,
-  showErrorMessage,
-  showLoadingMessage,
-  hideLoadingMessage
-} from './success.js';
-import {
-  closeModal
-} from './uploading-photos.js';
-import {randomFilterButton, defaultFilterButton, discussedFilterButton} from './filters.js';
-import {sortCommentDescend} from './util.js';
+const uploadErrorMessage = 'Не удалось отправить форму. Попробуйте еще раз';
+const loadErrorMessage = 'Отсутствует связь с сервером. Попробуйте позже';
 
-const load = function(){
+import {showAlert} from './success.js'
+
+const load = function(onSuccess) {
   fetch('https://22.javascript.pages.academy/kekstagram/data')
-    .then((response) => {
-      if (!response.ok) {
-        alert('Произошла ошибка соединения');
-      }
-      return response.json();
+    .then((response) => response.json())
+    .then((data) => {
+      onSuccess(data);
     })
-    .then((json) => {
-      const clearPictureList = (pictures) => {
-        for (let i = 0; i < pictures.length; i++) {
-          pictures[i].outerHTML = '';
-        }
-      };
-      const pictures =  document.querySelectorAll('.picture');
-      clearPictureList(pictures);
-      document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-      if (discussedFilterButton.classList.contains('img-filters__button--active')) {
-
-        json.sort(sortCommentDescend);
-        generatePostBlock.photoDescriptions = json;
-        postList.appendChild(generateGroupPosts(json));
-        return undefined;
-
-      } if (randomFilterButton.classList.contains('img-filters__button--active')) {
-
-        json.sort(function(){
-          return 0.5 - Math.random()
-        });
-        json.length = 10;
-        generatePostBlock.photoDescriptions = json;
-        postList.appendChild(generateGroupPosts(json));
-        return undefined;
-
-      } if (defaultFilterButton.classList.contains('img-filters__button--active')) {
-
-        generatePostBlock.photoDescriptions = json;
-        postList.appendChild(generateGroupPosts(json));
-        return undefined;
-
-      }
+    .catch(() => {
+      showAlert(loadErrorMessage);
     });
-  return undefined;
 };
 
-const upload = function(evt) {
+const upload = function(onSuccess, onError, evt) {
   const formData = new FormData(evt.target);
   evt.preventDefault();
-
   fetch(
     'https://22.javascript.pages.academy/kekstagram',
     {
@@ -73,19 +26,15 @@ const upload = function(evt) {
     },
   )
     .then((response) => {
-      if (response.ok) {
-        hideLoadingMessage();
-        showSuccessMessage();
+      if (response.ok){
+        onSuccess();
       } else {
-        hideLoadingMessage();
-        showErrorMessage();
+        onError(uploadErrorMessage);
       }
     })
-    .catch(() => {
-      showErrorMessage();
+    .catch(()=> {
+      onError(uploadErrorMessage);
     });
-  closeModal();
-  showLoadingMessage();
 };
 
 export {load, upload};

@@ -1,15 +1,12 @@
 'use strict';
 const main = document.querySelector('main');
-const errorUpload = document.querySelector('#error')
-  .content
-  .querySelector('.error');
-
+const errorUpload = document.querySelector('#error').content.querySelector('.error');
 const errorElement = errorUpload.cloneNode(true);
 const errorButton = errorElement.querySelector('.error__button');
 const errorInner = errorElement.querySelector('.error__inner');
 const errorTitle = errorElement.querySelector('.error__title');
 
-const createErrorModule = (errorText) => {
+const createErrorModule = function (errorText) {
   if (errorText) {
     errorTitle.textContent = errorText;
   }
@@ -19,30 +16,30 @@ const createErrorModule = (errorText) => {
   document.addEventListener('keydown', errorEscPressHandler);
 };
 
-const deleteErrorModule = () => {
+const deleteErrorModule = function () {
   main.removeChild(errorElement);
   errorButton.removeEventListener('click', errorButtonClickHandler);
   document.removeEventListener('click', errorWindowClickHandler);
   document.removeEventListener('keydown', errorEscPressHandler);
 };
 
-const errorButtonClickHandler = () => {
+const errorButtonClickHandler = function () {
   deleteErrorModule();
 };
 
-const errorWindowClickHandler = (evt) => {
+const errorWindowClickHandler = function (evt) {
   if (evt.target !== errorInner) {
     deleteErrorModule();
   }
 };
 
-const errorEscPressHandler = (evt) => {
+const errorEscPressHandler = function (evt) {
   if (evt.key === 'Escape') {
     deleteErrorModule();
   }
 };
 
-const errorUploadHandler = (errorText = false) => {
+const errorUploadHandler = function (errorText = false) {
   createErrorModule(errorText);
 };
 

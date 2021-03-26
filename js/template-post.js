@@ -1,18 +1,19 @@
 'use strict';
+// Начальное количество выводимых коментариев
+const START_COMMENTS_AMOUNT = 5;
 // Шаблон изображения случайного пользователя
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureClose = document.querySelector('.big-picture__cancel');
-const postTemplate = document
-  .querySelector('#picture')
-  .content.querySelector('.picture');
+const postTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const postList = document.querySelector('.pictures');
 const social = bigPicture.querySelector('.social');
 const socialComments = social.querySelector('.social__comments');
 const socialComment = socialComments.querySelector('li');
 const commentsLoader = social.querySelector('.comments-loader');
 const commentСurrent = bigPicture.querySelector('.comments-current');
-// Начальное количество выводимых коментариев
-const START_COMMENTS_AMOUNT = 5;
+
+import {load} from './server.js';
+
 // Функция открытия поста
 const showPost = function (post) {
   let currentIndex = 0;
@@ -49,6 +50,7 @@ const showPost = function (post) {
     let avatar = cloneCommentContainer.querySelector('.social__picture');
     let text = cloneCommentContainer.querySelector('.social__text');
     avatar.src = post.comments[i].avatar;
+    avatar.alt = post.comments[i].name;
     text.textContent = post.comments[i].message;
   };
   if (post.comments.length <= 5) {
@@ -103,8 +105,7 @@ const generatePostBlock = function (post) {
   let postElement = postTemplate.cloneNode(true);
   postElement.querySelector('.picture__img').src = post.url;
   postElement.querySelector('.picture__likes').textContent = post.likes;
-  postElement.querySelector('.picture__comments').textContent =
-    post.comments.length;
+  postElement.querySelector('.picture__comments').textContent = post.comments.length;
   // Открытие поста
   postElement.addEventListener('click', (evt) => {
     evt.preventDefault();
@@ -121,4 +122,12 @@ const generateGroupPosts = function (collection) {
   return fragment;
 };
 
-export { postTemplate, postList, generatePostBlock, generateGroupPosts };
+const onDataSuccess = function (data) {
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+  generatePostBlock.photoDescriptions = data;
+  postList.appendChild(generateGroupPosts(data));
+};
+
+load(onDataSuccess);
+
+export {postList, generatePostBlock, generateGroupPosts};

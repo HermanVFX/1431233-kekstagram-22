@@ -1,18 +1,20 @@
 'use strict';
-import {closeModal} from './uploading-photos.js';
-
+const ALERT_SHOW_TIME = 5000;
 const main = document.querySelector('main');
 const form = document.querySelector('.img-upload__form');
-const findSuccessButton = function() {
+
+import {closeModal} from './uploading-photos.js';
+
+const findSuccessButton = function () {
   const successButton = main.querySelector('.success__button');
   return successButton;
 };
-const findErrorButton = function() {
+const findErrorButton = function () {
   const errorButton = main.querySelector('.error__button');
   return errorButton;
 };
 
-const hideSuccessMessage = function() {
+const hideSuccessMessage = function () {
   document.querySelector('body').classList.remove('modal-open');
   findSuccessButton().removeEventListener('click', hideSuccessMessage);
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
@@ -20,7 +22,7 @@ const hideSuccessMessage = function() {
   main.querySelector('.success').remove();
 };
 
-const hideErrorMessage = function() {
+const hideErrorMessage = function () {
   document.querySelector('body').classList.remove('modal-open');
   findErrorButton().removeEventListener('click', hideErrorMessage);
   document.removeEventListener('keydown', onErrorMessageEscKeydown);
@@ -28,7 +30,7 @@ const hideErrorMessage = function() {
   main.querySelector('.error').remove();
 };
 
-const onSuccessMessageEscKeydown = function(evt) {
+const onSuccessMessageEscKeydown = function (evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeModal();
@@ -37,7 +39,7 @@ const onSuccessMessageEscKeydown = function(evt) {
   }
 };
 
-const onErrorMessageEscKeydown = function(evt) {
+const onErrorMessageEscKeydown = function (evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeModal();
@@ -46,7 +48,7 @@ const onErrorMessageEscKeydown = function(evt) {
   }
 };
 
-const onSuccessMessageMouseUp = function(evt) {
+const onSuccessMessageMouseUp = function (evt) {
   if (evt.target !== main.querySelector('.success__inner')) {
     hideSuccessMessage();
     closeModal();
@@ -54,7 +56,7 @@ const onSuccessMessageMouseUp = function(evt) {
   }
 };
 
-const onErrorMessageMouseUp = function(evt) {
+const onErrorMessageMouseUp = function (evt) {
   if (evt.target !== main.querySelector('.error__inner')) {
     hideErrorMessage();
     closeModal();
@@ -62,7 +64,7 @@ const onErrorMessageMouseUp = function(evt) {
   }
 };
 
-const showSuccessMessage = function() {
+const showSuccessMessage = function () {
   const alertBox = document.createDocumentFragment();
   const alertSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   const successSection = alertSuccessTemplate.cloneNode(true);
@@ -74,7 +76,7 @@ const showSuccessMessage = function() {
   document.addEventListener('mouseup', onSuccessMessageMouseUp);
 };
 
-const showErrorMessage = function() {
+const showErrorMessage = function () {
   const alertBox = document.createDocumentFragment();
   const alertErrorTemplate = document.querySelector('#error').content.querySelector('.error');
   const errorSection = alertErrorTemplate.cloneNode(true);
@@ -86,17 +88,25 @@ const showErrorMessage = function() {
   document.addEventListener('mouseup', onErrorMessageMouseUp);
 };
 
-const showLoadingMessage = function() {
-  document.querySelector('body').classList.add('modal-open');
-  const alertBox = document.createDocumentFragment();
-  const loadingMessageTemplate = document.querySelector('#messages').content.querySelector('.img-upload__message--loading');
-  const message = loadingMessageTemplate.cloneNode(true);
-  alertBox.appendChild(message);
-  main.appendChild(alertBox);
-};
+const showAlert = function (message) {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
 
-const hideLoadingMessage = function() {
-  document.querySelector('body').classList.remove('modal-open');
-  main.querySelector('.img-upload__message--loading').remove();
-};
-export {showErrorMessage, showSuccessMessage, showLoadingMessage, hideLoadingMessage};
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+}
+
+export {showErrorMessage, showSuccessMessage, showAlert};
