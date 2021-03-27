@@ -11,6 +11,7 @@ const socialComments = social.querySelector('.social__comments');
 const socialComment = socialComments.querySelector('li');
 const commentsLoader = social.querySelector('.comments-loader');
 const commentСurrent = bigPicture.querySelector('.comments-current');
+// Сколько коментариев выводить за раз
 
 import {load} from './server.js';
 
@@ -63,7 +64,11 @@ const showPost = function (post) {
   }
 
   const showComments = function () {
-    currentLimit += 5;
+    if (currentLimit === 0) {
+      currentLimit = 5;
+    } else {
+      currentLimit += 5;
+    }
     for (
       currentIndex;
       currentIndex < currentLimit && currentIndex < post.comments.length;
@@ -79,27 +84,26 @@ const showPost = function (post) {
     if (post.comments.length > currentLimit) {
       commentsLoader.classList.remove('hidden');
     } else {
+      currentLimit = currentIndex;
       commentsLoader.classList.add('hidden');
     }
+    return
   };
   commentsLoader.addEventListener('click', showComments);
 };
-
 // Закрытие поста
 const onBigPictureCloseClick = function () {
   bigPicture.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
-  document.addEventListener('keydown', escPress);
 };
 
-const escPress = function (evt) {
-  if (evt.key === 'Escape') {
-    bigPicture.classList.add('hidden');
-    evt.preventDefault();
+document.body.addEventListener('keyup', function (e) {
+  let key = e.keyCode;
+  if (key == 27) {
     onBigPictureCloseClick();
   }
-};
+}, false);
 
 const generatePostBlock = function (post) {
   let postElement = postTemplate.cloneNode(true);
@@ -110,6 +114,7 @@ const generatePostBlock = function (post) {
   postElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     showPost(post);
+    return
   });
   return postElement;
 };

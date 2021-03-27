@@ -48,7 +48,8 @@ import {
   showSuccessMessage,
   showErrorMessage
 } from './success.js';
-
+// Определение размера
+let scale = parseInt(scaleControlValue.value, 10);
 // Функция закрытия окна нажатием Escape
 const escPress = function (evt) {
   if (evt.key === 'Escape' && hashTagsField !== document.activeElement && textDescription !== document.activeElement) {
@@ -59,7 +60,6 @@ const escPress = function (evt) {
 };
 // Открытие окна
 const openModal = function () {
-
   imageUploadPreview.className = 'effects__preview--none';
   imageUploadPreview.style = ''
   const file = fileChooser.files[0];
@@ -97,22 +97,23 @@ const closeModal = function () {
   imgUploadEffectLevel.classList.add('hidden');
   hashTagsField.value = '';
   textDescription.value = '';
+  scale = 100;
 };
 // Уменьшение масштаба изображения нажатием на минус
 const onMinusScaleClick = function () {
-  let scale = parseInt(scaleControlValue.value, 10);
   if (scale <= SCALE_LIMITS.max && scale > SCALE_LIMITS.min) {
     scale -= SCALE_LIMITS.step;
   }
   changeImageScale(scale);
+  // return scale;
 };
 // Увеличение масштаба изображения нажатием на плюс
 const onPlusScaleClick = function () {
-  let scale = parseInt(scaleControlValue.value, 10);
   if (scale >= SCALE_LIMITS.min && scale < SCALE_LIMITS.max) {
     scale += SCALE_LIMITS.step;
   }
   changeImageScale(scale);
+  // return scale;
 };
 // Функция изменения масштаба
 const changeImageScale = function (number) {
@@ -167,6 +168,7 @@ const changeFilterHandler = function (evt) {
     imageUploadPreview.style.transform = 'scale(1.00)';
     counterValue.value = DEFAULT_EFFECT_LEVEL + '%';
     sliderElement.noUiSlider.updateOptions({ start: DEFAULT_EFFECT_LEVEL });
+    changeImageScale(scale);
   }
 };
 // Глубина эффекта по умолчанию
