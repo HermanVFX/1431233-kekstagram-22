@@ -1,4 +1,3 @@
-'use strict';
 const HASHTAGS_MAX_COUNT = 5;
 const COMMENTS_MAX = 140;
 const HASHTAG_REG_EXP = /^#([а-яА-Я]|[a-zA-Z]|[0-9]){1,19}$/;

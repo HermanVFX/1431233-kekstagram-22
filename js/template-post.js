@@ -1,4 +1,3 @@
-'use strict';
 // Начальное количество выводимых коментариев
 const START_COMMENTS_AMOUNT = 5;
 // Шаблон изображения случайного пользователя
@@ -11,7 +10,6 @@ const socialComments = social.querySelector('.social__comments');
 const socialComment = socialComments.querySelector('li');
 const commentsLoader = social.querySelector('.comments-loader');
 const commentСurrent = bigPicture.querySelector('.comments-current');
-// Сколько коментариев выводить за раз
 
 import {load} from './server.js';
 
@@ -35,7 +33,7 @@ const showPost = function (post) {
   bigPicture.querySelector('.big-picture__img > img').src = post.url;
   bigPicture.querySelector('.likes-count').textContent = post.likes;
   bigPicture.querySelector('.social__caption').textContent = post.description;
-  bigPictureClose.addEventListener('click', onBigPictureCloseClick);
+  // bigPictureClose.addEventListener('click', onBigPictureCloseClick);
   bigPicture.classList.remove('hidden');
   // Отображение комментариев
   bigPicture.querySelector('.comments-count').textContent =
@@ -63,7 +61,7 @@ const showPost = function (post) {
     generateComments(i);
   }
 
-  const showComments = function () {
+  const handlerShowComments = function () {
     if (currentLimit === 0) {
       currentLimit = 5;
     } else {
@@ -87,23 +85,23 @@ const showPost = function (post) {
       currentLimit = currentIndex;
       commentsLoader.classList.add('hidden');
     }
-    return
   };
-  commentsLoader.addEventListener('click', showComments);
+  commentsLoader.addEventListener('click', handlerShowComments);
+  // Закрытие поста
+  const onBigPictureCloseClick = function () {
+    bigPicture.classList.add('hidden');
+    document.querySelector('body').classList.remove('modal-open');
+    bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
+    commentsLoader.removeEventListener('click', handlerShowComments);
+  };
+  bigPictureClose.addEventListener('click', onBigPictureCloseClick);
+  // Закрытие поста esc
+  document.body.addEventListener('keyup', function (evt) {
+    if (evt.key === 'Escape') {
+      onBigPictureCloseClick();
+    }
+  }, false);
 };
-// Закрытие поста
-const onBigPictureCloseClick = function () {
-  bigPicture.classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
-  bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
-};
-
-document.body.addEventListener('keyup', function (e) {
-  let key = e.keyCode;
-  if (key == 27) {
-    onBigPictureCloseClick();
-  }
-}, false);
 
 const generatePostBlock = function (post) {
   let postElement = postTemplate.cloneNode(true);
@@ -114,7 +112,6 @@ const generatePostBlock = function (post) {
   postElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     showPost(post);
-    return
   });
   return postElement;
 };

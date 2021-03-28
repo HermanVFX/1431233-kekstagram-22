@@ -1,4 +1,3 @@
-'use strict';
 const ALERT_SHOW_TIME = 5000;
 const main = document.querySelector('main');
 const form = document.querySelector('.img-upload__form');
@@ -14,17 +13,17 @@ const findErrorButton = function () {
   return errorButton;
 };
 
-const hideSuccessMessage = function () {
+const handlerSuccessMessage = function () {
   document.querySelector('body').classList.remove('modal-open');
-  findSuccessButton().removeEventListener('click', hideSuccessMessage);
+  findSuccessButton().removeEventListener('click', handlerSuccessMessage);
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
   document.removeEventListener('mouseup', onSuccessMessageMouseUp);
   main.querySelector('.success').remove();
 };
 
-const hideErrorMessage = function () {
+const handleErrorMessage = function () {
   document.querySelector('body').classList.remove('modal-open');
-  findErrorButton().removeEventListener('click', hideErrorMessage);
+  findErrorButton().removeEventListener('click', handleErrorMessage);
   document.removeEventListener('keydown', onErrorMessageEscKeydown);
   document.removeEventListener('mouseup', onErrorMessageMouseUp);
   main.querySelector('.error').remove();
@@ -35,7 +34,7 @@ const onSuccessMessageEscKeydown = function (evt) {
     evt.preventDefault();
     closeModal();
     form.reset();
-    hideSuccessMessage();
+    handlerSuccessMessage();
   }
 };
 
@@ -44,13 +43,13 @@ const onErrorMessageEscKeydown = function (evt) {
     evt.preventDefault();
     closeModal();
     form.reset();
-    hideErrorMessage();
+    handleErrorMessage();
   }
 };
 
 const onSuccessMessageMouseUp = function (evt) {
   if (evt.target !== main.querySelector('.success__inner')) {
-    hideSuccessMessage();
+    handlerSuccessMessage();
     closeModal();
     form.reset();
   }
@@ -58,7 +57,7 @@ const onSuccessMessageMouseUp = function (evt) {
 
 const onErrorMessageMouseUp = function (evt) {
   if (evt.target !== main.querySelector('.error__inner')) {
-    hideErrorMessage();
+    handleErrorMessage();
     closeModal();
     form.reset();
   }
@@ -71,7 +70,7 @@ const showSuccessMessage = function () {
   alertBox.appendChild(successSection);
   main.appendChild(alertBox);
   document.querySelector('body').classList.add('modal-open');
-  findSuccessButton().addEventListener('click', hideSuccessMessage);
+  findSuccessButton().addEventListener('click', handlerSuccessMessage);
   document.addEventListener('keydown', onSuccessMessageEscKeydown);
   document.addEventListener('mouseup', onSuccessMessageMouseUp);
 };
@@ -83,7 +82,7 @@ const showErrorMessage = function () {
   alertBox.appendChild(errorSection);
   main.appendChild(alertBox);
   document.querySelector('body').classList.add('modal-open');
-  findErrorButton().addEventListener('click', hideErrorMessage);
+  findErrorButton().addEventListener('click', handleErrorMessage);
   document.addEventListener('keydown', onErrorMessageEscKeydown);
   document.addEventListener('mouseup', onErrorMessageMouseUp);
 };

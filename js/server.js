@@ -1,4 +1,3 @@
-'use strict';
 const uploadErrorMessage = 'Не удалось отправить форму. Попробуйте еще раз';
 const loadErrorMessage = 'Отсутствует связь с сервером. Попробуйте позже';
 

@@ -1,4 +1,3 @@
-'use strict';
 // Процент масштабирования
 const SCALE_LIMITS = {
   min: 25,
@@ -6,7 +5,7 @@ const SCALE_LIMITS = {
   step: 25,
 };
 // Форматы для проверки загружаемых файлов
-const SUPPORTED_FORMATS  = ['jpg', 'jpeg', 'png'];
+const DOWNLOADABLE_FORMATS  = ['jpg', 'jpeg', 'png'];
 // Насыщенность по умолчанию
 const DEFAULT_EFFECT_LEVEL = 100;
 // Максимальная насыщенность каждого эффекта
@@ -15,7 +14,7 @@ const MAX_EFFECTS_VALUES = {
   sepia: 1,
   marvin: 100,
   phobos: 3,
-  HEAT_VALUES: [1, 2],
+  VALUES_HEAT: [1, 2],
 };
 
 const fileChooser = document.querySelector('.img-upload__start input[type=file]');
@@ -60,11 +59,12 @@ const escPress = function (evt) {
 };
 // Открытие окна
 const openModal = function () {
+  imageUploadPreview.className.match('effects__preview--none')
   imageUploadPreview.className = 'effects__preview--none';
   imageUploadPreview.style = ''
   const file = fileChooser.files[0];
   const fileName = file.name.toLowerCase();
-  const matches = SUPPORTED_FORMATS.some((it) => {
+  const matches = DOWNLOADABLE_FORMATS.some((it) => {
     return fileName.endsWith(it);
   });
   if (!matches) {
@@ -91,6 +91,7 @@ const closeModal = function () {
   photosUploadOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener('keydown', escPress);
+  document.removeEventListener('keydown', openModal);
   uploadPhotos.value = '';
   imageUploadPreview.className = 'effects__preview--none';
   imageUploadPreview.style = ''
@@ -148,7 +149,7 @@ const setNewEffectDepth = function (levelValue) {
         imageUploadPreview.style.filter = 'blur(' + (MAX_EFFECTS_VALUES.phobos * value) + 'px)';
         break;
       case 'effects__preview--heat':
-        imageUploadPreview.style.filter = 'brightness(' + (MAX_EFFECTS_VALUES.HEAT_VALUES[1] * value + MAX_EFFECTS_VALUES.HEAT_VALUES[0]) + ')';
+        imageUploadPreview.style.filter = 'brightness(' + (MAX_EFFECTS_VALUES.VALUES_HEAT[1] * value + MAX_EFFECTS_VALUES.VALUES_HEAT[0]) + ')';
         break;
       default:
         imageUploadPreview.style.filter = '';

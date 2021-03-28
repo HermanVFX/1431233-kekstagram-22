@@ -1,5 +1,3 @@
-
-'use strict';
 const RERENDER_DELAY = 500;
 
 const defaultFilterButton = document.querySelector('#filter-default');
@@ -16,49 +14,49 @@ const clearPictureList = (pictures) => {
   }
 };
 
-const onDiscussedFilterRadio = function(data) {
+const onDiscussedFilterLoad = debounce(function(data) {
+  const pictures =  document.querySelectorAll('.picture');
+  clearPictureList(pictures);
+  discussedFilterButton.classList.add('img-filters__button--active');
+  defaultFilterButton.classList.remove('img-filters__button--active');
+  randomFilterButton.classList.remove('img-filters__button--active');
   data.sort(sortCommentDescend);
   generatePostBlock.photoDescriptions = data;
   postList.appendChild(generateGroupPosts(data));
-};
+}, RERENDER_DELAY);
 
-const onRandomFilterRadio = function(data) {
+const onRandomFilterLoad = debounce(function(data) {
+  const pictures =  document.querySelectorAll('.picture');
+  clearPictureList(pictures);
+  randomFilterButton.classList.add('img-filters__button--active');
+  defaultFilterButton.classList.remove('img-filters__button--active');
+  discussedFilterButton.classList.remove('img-filters__button--active');
   data.sort(function(){
     return 0.5 - Math.random()
   });
   data.length = 10;
   generatePostBlock.photoDescriptions = data;
   postList.appendChild(generateGroupPosts(data));
-};
+}, RERENDER_DELAY);
 
-const onDefaultFilterRadio = function(data) {
-  generatePostBlock.photoDescriptions = data;
-  postList.appendChild(generateGroupPosts(data));
-};
-
-defaultFilterButton.addEventListener('click',  debounce(() => {
+const onDefaultFilterLoad = debounce(function(data) {
+  const pictures =  document.querySelectorAll('.picture');
+  clearPictureList(pictures);
   defaultFilterButton.classList.add('img-filters__button--active');
   randomFilterButton.classList.remove('img-filters__button--active');
   discussedFilterButton.classList.remove('img-filters__button--active');
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  load(onDefaultFilterRadio);
-}, RERENDER_DELAY));
+  generatePostBlock.photoDescriptions = data;
+  postList.appendChild(generateGroupPosts(data));
+}, RERENDER_DELAY);
 
-randomFilterButton.addEventListener('click',  debounce(() => {
-  randomFilterButton.classList.add('img-filters__button--active');
-  defaultFilterButton.classList.remove('img-filters__button--active');
-  discussedFilterButton.classList.remove('img-filters__button--active');
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  load(onRandomFilterRadio);
-}, RERENDER_DELAY));
+defaultFilterButton.addEventListener('click',  function () {
+  load(onDefaultFilterLoad);
+});
 
-discussedFilterButton.addEventListener('click',  debounce(() => {
-  discussedFilterButton.classList.add('img-filters__button--active');
-  defaultFilterButton.classList.remove('img-filters__button--active');
-  randomFilterButton.classList.remove('img-filters__button--active');
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  load(onDiscussedFilterRadio);
-}, RERENDER_DELAY));
+randomFilterButton.addEventListener('click',  function () {
+  load(onRandomFilterLoad);
+});
+
+discussedFilterButton.addEventListener('click',  function () {
+  load(onDiscussedFilterLoad);
+});
