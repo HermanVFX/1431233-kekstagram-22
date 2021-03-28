@@ -1,14 +1,12 @@
 // Функция debounce взята с ресурса https://learn.javascript.ru/task/debounce
-function debounce(f, ms) {
-  let isCooldown = false;
-
-  return function() {
-    if (isCooldown) {
-      return;
+const debounce = (fn, ms) => {
+  let timeout;
+  return function () {
+    const fnCall = () => {
+      fn.apply(this, arguments)
     }
-    f.apply(this, arguments);
-    isCooldown = true;
-    setTimeout(() => isCooldown = false, ms);
+    clearTimeout(timeout);
+    timeout = setTimeout(fnCall, ms)
   };
 }
 // Подсчет коментариев для сортировки
