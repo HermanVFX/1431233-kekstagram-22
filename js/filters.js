@@ -45,28 +45,22 @@ const toggleFilters = function (activeButton) {
   activeFilterItem.classList.add('img-filters__button--active');
 };
 
-const renderFilter = function () {
-  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-
-  const onFilterChange = debounce((evt) => {
-    if (activeFilterItem !== evt.target) {
-      toggleFilters(evt.target);
-      const pictures =  document.querySelectorAll('.picture');
-      clearPictureList(pictures);
-      switch (evt.target.id) {
-        case FilterType.RANDOM:
-          load(onRandomFilterLoad);
-          break;
-        case FilterType.DISCUSSED:
-          load(onDiscussedFilterLoad);
-          break;
-        default:
-          load(onDefaultFilterLoad);
-      }
+const onFilterChange = function (evt) {
+  if (activeFilterItem !== evt.target) {
+    toggleFilters(evt.target);
+    const pictures =  document.querySelectorAll('.picture');
+    clearPictureList(pictures);
+    switch (evt.target.id) {
+      case FilterType.RANDOM:
+        load(onRandomFilterLoad);
+        break;
+      case FilterType.DISCUSSED:
+        load(onDiscussedFilterLoad);
+        break;
+      default:
+        load(onDefaultFilterLoad);
     }
-  }, RERENDER_DELAY)
-
-  filtersForm.addEventListener('click', onFilterChange);
+  }
 };
 
-renderFilter();
+filtersForm.addEventListener('click', debounce(onFilterChange, RERENDER_DELAY));

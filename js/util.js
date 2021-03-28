@@ -1,12 +1,13 @@
 // Функция debounce взята с ресурса https://learn.javascript.ru/task/debounce
-const debounce = (fn, ms) => {
-  let timeout;
-  return function () {
-    const fnCall = () => {
-      fn.apply(this, arguments)
-    }
-    clearTimeout(timeout);
-    timeout = setTimeout(fnCall, ms)
+function debounce(fn, interval) {
+  let timer;
+  return function debounced() {
+    clearTimeout(timer);
+    let args = arguments;
+    let that = this;
+    timer = setTimeout(function callOriginalFn() {
+      fn.apply(that, args);
+    }, interval);
   };
 }
 // Подсчет коментариев для сортировки
