@@ -45,7 +45,7 @@ const toggleFilters = function (activeButton) {
   activeFilterItem.classList.add('img-filters__button--active');
 };
 
-const onFilterChange = function (evt) {
+const onFilterChange = debounce((evt) => {
   if (activeFilterItem !== evt.target) {
     toggleFilters(evt.target);
     const pictures =  document.querySelectorAll('.picture');
@@ -61,6 +61,6 @@ const onFilterChange = function (evt) {
         load(onDefaultFilterLoad);
     }
   }
-};
+}, RERENDER_DELAY)
 
-filtersForm.addEventListener('click', debounce(onFilterChange, RERENDER_DELAY));
+filtersForm.addEventListener('click', onFilterChange);
