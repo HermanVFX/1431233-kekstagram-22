@@ -1,8 +1,11 @@
 const RERENDER_DELAY = 500;
+const FilterType = {
+  RANDOM: 'filter-random',
+  DISCUSSED: 'filter-discussed',
+};
+const filtersForm = document.querySelector('.img-filters__form');
 
-const defaultFilterButton = document.querySelector('#filter-default');
-const randomFilterButton = document.querySelector('#filter-random');
-const discussedFilterButton = document.querySelector('#filter-discussed');
+let activeFilterItem = filtersForm.querySelector('.img-filters__button--active');
 
 import{postList, generatePostBlock, generateGroupPosts} from './template-post.js';
 import {debounce, sortCommentDescend} from './util.js';
@@ -14,49 +17,56 @@ const clearPictureList = (pictures) => {
   }
 };
 
-const onDiscussedFilterLoad = debounce(function(data) {
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  discussedFilterButton.classList.add('img-filters__button--active');
-  defaultFilterButton.classList.remove('img-filters__button--active');
-  randomFilterButton.classList.remove('img-filters__button--active');
+const onDiscussedFilterLoad = function(data) {
   data.sort(sortCommentDescend);
   generatePostBlock.photoDescriptions = data;
   postList.appendChild(generateGroupPosts(data));
-}, RERENDER_DELAY);
+};
 
-const onRandomFilterLoad = debounce(function(data) {
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  randomFilterButton.classList.add('img-filters__button--active');
-  defaultFilterButton.classList.remove('img-filters__button--active');
-  discussedFilterButton.classList.remove('img-filters__button--active');
+const onRandomFilterLoad = function(data) {
   data.sort(function(){
     return 0.5 - Math.random()
   });
   data.length = 10;
   generatePostBlock.photoDescriptions = data;
   postList.appendChild(generateGroupPosts(data));
-}, RERENDER_DELAY);
+};
 
-const onDefaultFilterLoad = debounce(function(data) {
-  const pictures =  document.querySelectorAll('.picture');
-  clearPictureList(pictures);
-  defaultFilterButton.classList.add('img-filters__button--active');
-  randomFilterButton.classList.remove('img-filters__button--active');
-  discussedFilterButton.classList.remove('img-filters__button--active');
+const onDefaultFilterLoad = function(data) {
   generatePostBlock.photoDescriptions = data;
   postList.appendChild(generateGroupPosts(data));
-}, RERENDER_DELAY);
+};
 
-defaultFilterButton.addEventListener('click',  function () {
-  load(onDefaultFilterLoad);
-});
+const toggleFilters = function (activeButton) {
+  if (activeFilterItem) {
+    activeFilterItem.classList.remove('img-filters__button--active');
+  }
+  activeFilterItem = activeButton;
+  activeFilterItem.classList.add('img-filters__button--active');
+};
 
-randomFilterButton.addEventListener('click',  function () {
-  load(onRandomFilterLoad);
-});
+const renderFilter = function () {
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
 
-discussedFilterButton.addEventListener('click',  function () {
-  load(onDiscussedFilterLoad);
-});
+  const onFilterChange = debounce((evt) => {
+    if (activeFilterItem !== evt.target) {
+      toggleFilters(evt.target);
+      const pictures =  document.querySelectorAll('.picture');
+      clearPictureList(pictures);
+      switch (evt.target.id) {
+        case FilterType.RANDOM:
+          load(onRandomFilterLoad);
+          break;
+        case FilterType.DISCUSSED:
+          load(onDiscussedFilterLoad);
+          break;
+        default:
+          load(onDefaultFilterLoad);
+      }
+    }
+  }, RERENDER_DELAY)
+
+  filtersForm.addEventListener('click', onFilterChange);
+};
+
+renderFilter();

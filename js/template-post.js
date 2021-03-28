@@ -12,7 +12,6 @@ const commentsLoader = social.querySelector('.comments-loader');
 const commentСurrent = bigPicture.querySelector('.comments-current');
 
 import {load} from './server.js';
-
 // Функция открытия поста
 const showPost = function (post) {
   let currentIndex = 0;
